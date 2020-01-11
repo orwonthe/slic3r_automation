@@ -1,0 +1,13 @@
+source_files = $(wildcard sources/*.stl)
+gcode_files = $(subst .stl,.gcode,$(subst sources/,gcodes/,$(wildcard sources/*.stl)))
+printer_config = ../../../printer.ini
+print_config = ../../print.ini
+filament_config = ../filament.ini
+slicing_command = slic3r-prusa3d --print-center 0,0
+
+all: $(gcode_files)
+
+.PHONY: all
+
+gcodes/%.gcode : sources/%.stl $(printer_config) $(print_config) $(filament_config)
+	$(slicing_command) --load $(printer_config) --load $(print_config) --load $(filament_config) --output $@ $<
